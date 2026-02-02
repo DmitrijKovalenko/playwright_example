@@ -46,7 +46,7 @@ jobs:
       - name: Run Playwright Tests
         env:
           TRACE: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.trace || 'off' }}
-          TAGS:  ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tags  || '' }}
+          TAGS: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tags  || '' }}
           BASE_URL: ${{ secrets.BASE_URL }}
           TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}

@@ -24,6 +24,7 @@ Automated end-to-end testing suite for RepMove Login and Registration functional
 ## Overview
 
 This test automation framework implements comprehensive testing for RepMove's authentication flows:
+
 - **Login functionality** - User authentication, validation, and error handling
 - **Registration functionality** - New user account creation with form validation
 
@@ -113,6 +114,7 @@ npm install
 ```
 
 This will install:
+
 - Playwright and browser binaries
 - TypeScript and type definitions
 - ESLint and Prettier
@@ -175,16 +177,19 @@ npm run test
 ### Run Tests by Category
 
 **Login Tests Only:**
+
 ```bash
 npm run test:login
 ```
 
 **Registration Tests Only:**
+
 ```bash
 npm run test:registration
 ```
 
 **UI Tests (all):**
+
 ```bash
 npm run test:ui
 ```
@@ -212,16 +217,19 @@ npx playwright test tests/ui/login/submit-login.spec.ts
 ### Run Tests by Tag
 
 **Run only negative tests:**
+
 ```bash
 npx playwright test --grep @negative
 ```
 
 **Run only edge case tests:**
+
 ```bash
 npx playwright test --grep @edge-cases
 ```
 
 **Available tags:**
+
 - `@auth` - Authentication tests
 - `@login` - Login functionality
 - `@registration` - Registration functionality
@@ -243,6 +251,7 @@ npx playwright show-report
 ```
 
 The report includes:
+
 - Test execution summary
 - Pass/fail status for each test
 - Screenshots on failure
@@ -252,6 +261,7 @@ The report includes:
 ### Report Location
 
 Reports are generated in:
+
 - `playwright-report/` - HTML report
 - `test-results/` - JSON and other artifacts
 
@@ -262,11 +272,13 @@ Reports are generated in:
 ### Linting
 
 **Run ESLint:**
+
 ```bash
 npm run lint
 ```
 
 **Fix linting issues automatically:**
+
 ```bash
 npm run lint:fix
 ```
@@ -274,11 +286,13 @@ npm run lint:fix
 ### Code Formatting
 
 **Format code with Prettier:**
+
 ```bash
 npm run format
 ```
 
 **Check formatting without modifying files:**
+
 ```bash
 npm run format:check
 ```
@@ -286,6 +300,7 @@ npm run format:check
 ### Type Checking
 
 **Run TypeScript type checking:**
+
 ```bash
 npm run type-check
 ```
@@ -295,21 +310,25 @@ npm run type-check
 ## Technical Stack
 
 ### Core Framework
+
 - **Playwright:** v1.55.0 - Browser automation
 - **TypeScript:** v5.x - Type-safe programming
 - **Node.js:** v18+ - Runtime environment
 
 ### Testing Tools
+
 - **@playwright/test** - Test runner and assertions
 - **monocart-reporter** - Enhanced HTML reporting
 - **dotenv** - Environment variable management
 
 ### Code Quality Tools
+
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **TypeScript Compiler** - Type checking
 
 ### Design Patterns
+
 - **Page Object Model (POM)** - Maintainable test structure
 - **Fixture Pattern** - Reusable test setup
 - **Data-Driven Testing** - Dynamic test data generation
@@ -319,13 +338,17 @@ npm run type-check
 ## Key Technical Decisions
 
 ### 1. No Hard Waits
+
 All waiting mechanisms use Playwright's built-in functionality:
+
 - `waitFor({ state: 'visible' })` for element visibility
 - `waitFor({ state: 'hidden' })` for spinner disappearance
 - `expect().toBeVisible()` with timeout for assertions
 
 ### 2. Custom Spinner Handling
+
 Implemented custom `spinnerWait()` method in `BasePage` to handle application loading states:
+
 ```typescript
 async spinnerWait(timeout: number = 15000) {
   await this.wait(1000);
@@ -334,13 +357,17 @@ async spinnerWait(timeout: number = 15000) {
 ```
 
 ### 3. Dynamic Test Data
+
 Registration tests generate unique data for each run:
+
 - Timestamp-based email addresses
 - Random combinations from predefined lists
 - No test data cleanup required
 
 ### 4. Angular Component Support
+
 Custom locators for Angular components:
+
 - `app-input` - Input wrappers
 - `ng-select` - Dropdown components
 - `app-phone-number` - Phone number input
@@ -353,18 +380,22 @@ Custom locators for Angular components:
 ### Common Issues
 
 **Issue:** Tests fail with "Element not found"
+
 - **Solution:** Check if application is accessible at BASE_URL
 - **Solution:** Verify spinner timing and wait strategies
 
 **Issue:** Login tests fail with authentication error
+
 - **Solution:** Verify TEST_USER_EMAIL and TEST_USER_PASSWORD in .env file
 - **Solution:** Ensure test user exists in the system
 
 **Issue:** Registration tests fail with "email already exists"
+
 - **Solution:** Tests should generate unique emails automatically
 - **Solution:** Check timestamp and random string generation
 
 **Issue:** Timeout errors
+
 - **Solution:** Increase timeout in playwright.config.ts
 - **Solution:** Check network connectivity to staging environment
 
@@ -373,6 +404,7 @@ Custom locators for Angular components:
 ## Contributing
 
 ### Code Style Guidelines
+
 - Use TypeScript for all new files
 - Follow existing Page Object Model structure
 - Add JSDoc comments for public methods
@@ -380,6 +412,7 @@ Custom locators for Angular components:
 - Run linter and formatter before committing
 
 ### Adding New Tests
+
 1. Create test file in appropriate directory (`tests/ui/login/` or `tests/ui/registration/`)
 2. Import necessary fixtures and utilities
 3. Follow existing test structure with `test.step()` blocks
@@ -387,6 +420,7 @@ Custom locators for Angular components:
 5. Update TEST_CASES.md with new test documentation
 
 ### Adding New Page Objects
+
 1. Extend `BasePage` class
 2. Define locators in constructor
 3. Implement page-specific methods
