@@ -1,50 +1,44 @@
-import { defineConfig, devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
-import { EnvUtils } from './utils/env.utils';
-
-dotenv.config();
-
-try {
-  EnvUtils.validateRequiredEnvVars();
-} catch (error) {
-  console.error((error as Error).message);
-  process.exit(1);
-}
-
-const baseURL = EnvUtils.getBaseURL();
+import { defineConfig } from '@playwright/test';
+import 'tsconfig-paths/register';
+import 'dotenv/config';
 
 export default defineConfig({
-  outputDir: 'test-results/',
-  preserveOutput: 'failures-only',
   testDir: './tests',
-  timeout: 60_000,
-  fullyParallel: true,
+  use: {
+    baseURL: process.env.BASE_URL,
+    trace: 'on-first-retry',
+  },
+
+  projects: [
+    {
+      name: 'setup',
+      testMatch: /tests\/auth\/auth\.setup\.ts/,
+    },
+    {
+      name: 'auth',
+      dependencies: ['setup'],
+      testMatch: /tests\/auth\/.*\.spec\.ts/,
+      use: {
+        storageState: '.auth/state.json',
+      },
+    },
+    {
+      name: 'guest',
+      testMatch: /tests\/guest\/.*\.spec\.ts/,
+    },
+  ],
+
   reporter: [
-    ['list'],
-    ['html', { open: 'never', outputFolder: 'playwright-report-ui' }],
-    ['junit', { outputFile: 'junit-report-ui/report.xml' }],
+    ['html', { outputFolder: 'reports/playwright-report', open: 'never' }],
+
     [
       'monocart-reporter',
       {
-        name: 'RepMove E2E Test Report',
-        outputFile: 'monocart-report-ui/index.html',
+        name: 'Citemed',
+        outputFile: 'reports/monocart/index.html',
       },
     ],
-  ],
-  workers: process.env.CI ? 2 : 4,
-  expect: {
-    timeout: 10000,
-  },
-  use: {
-    baseURL,
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-  },
-  projects: [
-    {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
+
+    ['allure-playwright', { outputFolder: 'reports/allure-results' }],
   ],
 });
